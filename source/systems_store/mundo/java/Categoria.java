@@ -7,10 +7,8 @@ public class Categoria {
     
 
 
-    public Categoria(int id, String tipoProducto, String descripcion) {
-        this.id = id;
-        this.tipoProducto = tipoProducto;
-        this.descripcion = descripcion;
+    public Categoria() {
+  
     }
 
     public int getId() { return id; }
