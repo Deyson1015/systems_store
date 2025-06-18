@@ -104,5 +104,42 @@ public class ProductoDAO {
           return false;
       }
   }
+  
+  /**
+   * Lista todos los productos de la base de datos.
+   * @return Lista de productos encontrados.
+   */
+  public List<Producto> listarProductos() {
+      List<Producto> lista = new ArrayList<>();
+      String sql = "SELECT * FROM productos";
+      try (Connection conn = Conexion.getConexion();
+           PreparedStatement stmt = conn.prepareStatement(sql);
+           ResultSet rs = stmt.executeQuery()) {
+
+          // Iterar sobre los resultados y construir objetos Producto
+          while (rs.next()) {
+              Producto p = new Producto();
+              p.setId(rs.getInt("id"));
+              p.setNombre(rs.getString("nombre"));
+              p.setDescripcion(rs.getString("descripcion"));
+              p.setCantidad(rs.getInt("cantidad"));
+              p.setPrecio(rs.getDouble("precio"));
+              p.setFechaIngreso(rs.getString("fecha_ingreso"));
+              p.setFoto(rs.getString("foto"));
+
+              // Crear objeto categoría con solo el ID
+              Categoria c = new Categoria();
+              c.setId(rs.getInt("categoria_id"));
+              p.setCategoria(c);
+
+              // Agregar el producto a la lista
+              lista.add(p);
+          }
+
+      } catch (SQLException e) {
+          System.out.println("Error al listar productos: " + e.getMessage());
+      }
+      return lista;
+  }
    
 }
