@@ -68,4 +68,41 @@ public class ProductoDAO {
             return false;
         }
     }
+    /**
+    * Elimina un producto de la base de datos según su ID.
+    * @param id Identificador del producto.
+    * @return true si se eliminó, false si falló.
+    */
+   public boolean eliminarProducto(int id) {
+       String sql = "DELETE FROM productos WHERE id=?";
+       try (Connection conn = Conexion.getConexion();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+           stmt.setInt(1, id);
+           return stmt.executeUpdate() > 0;
+
+       } catch (SQLException e) {
+           System.out.println("Error al eliminar producto: " + e.getMessage());
+           return false;
+       }
+   }
+   /**
+   * Elimina un producto de la base de datos según su ID.
+   * @param id Identificador del producto.
+   * @return true si se eliminó, false si falló.
+   */
+  public boolean eliminarProducto(int id) {
+      String sql = "DELETE FROM productos WHERE id=?";
+      try (Connection conn = Conexion.getConexion();
+           PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+          stmt.setInt(1, id);
+          return stmt.executeUpdate() > 0;
+
+      } catch (SQLException e) {
+          System.out.println("Error al eliminar producto: " + e.getMessage());
+          return false;
+      }
+  }
+   
 }
