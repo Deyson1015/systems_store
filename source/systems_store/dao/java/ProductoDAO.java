@@ -40,5 +40,32 @@ public class ProductoDAO {
             return false;
         }
     }
+    /**
+     * Actualiza un producto existente en la base de datos.
+     * @param producto Objeto Producto con los datos actualizados.
+     * @return true si se actualizó correctamente, false si hubo un error.
+     */
+    public boolean actualizarProducto(Producto producto) {
+        String sql = "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, fecha_ingreso=?, foto=?, categoria_id=? WHERE id=?";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            // Asignar valores a los parámetros
+            stmt.setString(1, producto.getNombre());
+            stmt.setString(2, producto.getDescripcion());
+            stmt.setInt(3, producto.getCantidad());
+            stmt.setDouble(4, producto.getPrecio());
+            stmt.setString(5, producto.getFechaIngreso());
+            stmt.setString(6, producto.getFoto());
+            stmt.setInt(7, producto.getCategoria().getId());
+            stmt.setInt(8, producto.getId());
+
+            // Ejecutar el UPDATE
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar producto: " + e.getMessage());
+            return false;
+        }
+    }
 }
