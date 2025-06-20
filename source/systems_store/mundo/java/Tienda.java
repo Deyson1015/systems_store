@@ -28,4 +28,24 @@ public class Tienda {
 		Collections.sort(productos, Comparator.comparing(Producto::getFechaIngreso));
 	}
 	
+	public static void ordenar(List<Producto> productos, String criterio) {
+		switch (criterio.toLowerCase()) {
+		case "precio":
+			ordenarPorPrecio(productos);
+			break;
+		case "nombre":
+			ordenarPorNombre(productos);
+			break;
+		case "cantidad":
+			 ordenarPorCantidad(productos);
+			 break;
+		case "fecha":
+			ordenarPorFecha(productos);
+			break;
+		default:
+			System.out.println("Criterio de orden no reconocido" + criterio);
+		
+		}
+	}
+	
 }

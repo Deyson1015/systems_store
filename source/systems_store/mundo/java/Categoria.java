@@ -13,8 +13,13 @@ public class Categoria {
 	public int getId() { return id; }
     public void setId(int id) {this.id=id;}
     
-    public String getTipoProducto() { return nombre; }
-    public void setTipoProducto(String tipoProducto ) {this.nombre=nombre;}
+    public String getNombre() { return nombre; }
+    public void setTipoNombre(String nombre ) {this.nombre = nombre;}
     
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion ) {this.descripcion = descripcion;}
     
+    public String toString() {
+    	return nombre;
+    }
 }
