@@ -112,18 +112,18 @@ public class ProductoDAO {
                 p.setDescripcion(rs.getString("descripcion"));
                 p.setCantidad(rs.getInt("cantidad"));
                 p.setPrecio(rs.getDouble("precio"));
-                Date fecha = rs.getDate("fecha_ingreso"));
+                Date fecha = (rs.getDate("fecha_ingreso"));
                 p.setFechaIngreso(fecha);
                 p.setFoto(rs.getString("foto"));
 
                 // Crear objeto categoría con solo el ID
-                Categoria c = new Categoria();
-                c.setId(rs.getInt("categoria_id"));
+                Categoria c = new Categoria(rs.getInt("categoria_id"), null);
                 p.setCategoria(c);
+
+
                 
-                Marca m = new Marca();
-                m.setId(rs.getInt("marca_id"));
-                p.setMarca(m);
+                Marca m = new Marca(rs.getInt("marca_id"),null);
+                p.setMarca(m); 
                 
 
                 // Agregar el producto a la lista
@@ -160,9 +160,8 @@ public class ProductoDAO {
                 p.setFechaIngreso(fecha);
                 p.setFoto(rs.getString("foto"));
 
-                Categoria c = new Categoria();
-                c.setId(rs.getInt("categoria_id"));
-                p.setCategoria(c);
+                Categoria c = new Categoria(rs.getInt("categoria_id"), null);
+                p.setCategoria(c); 
 
                 return p;
             }
