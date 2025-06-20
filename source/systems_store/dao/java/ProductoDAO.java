@@ -8,6 +8,7 @@ import java.util.List;
 // Importación de las clases del modelo y la conexión
 import systems_store.mundo.java.Producto;
 import systems_store.mundo.java.Categoria;
+import systems_store.mundo.java.Marca;
 import systems_store.conexion.java.Conexion;
 
 // Clase que se encarga de acceder a la base de datos para realizar operaciones CRUD con productos
@@ -19,7 +20,7 @@ public class ProductoDAO {
      * @return true si se insertó correctamente, false si hubo un error.
      */
     public boolean agregarProducto(Producto producto) {
-        String sql = "INSERT INTO productos(nombre, descripcion, cantidad, precio, fecha_ingreso, foto, categoria_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO productos(nombre, descripcion, cantidad, precio, fecha_ingreso, foto, categoria_id, marca_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConexion();  // Obtener la conexión
              PreparedStatement stmt = conn.prepareStatement(sql)) {  // Preparar sentencia SQL
 
@@ -28,9 +29,11 @@ public class ProductoDAO {
             stmt.setString(2, producto.getDescripcion());
             stmt.setInt(3, producto.getCantidad());
             stmt.setDouble(4, producto.getPrecio());
-            stmt.setString(5, producto.getFechaIngreso());
+            stmt.setDate(5, producto.getFechaIngreso());
             stmt.setString(6, producto.getFoto());
             stmt.setInt(7, producto.getCategoria().getId());
+            stmt.setInt(8, producto.getMarca().getId());
+            
 
             // Ejecutar el INSERT y devolver si se insertó al menos una fila
             return stmt.executeUpdate() > 0;
@@ -47,7 +50,7 @@ public class ProductoDAO {
      * @return true si se actualizó correctamente, false si hubo un error.
      */
     public boolean actualizarProducto(Producto producto) {
-        String sql = "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, fecha_ingreso=?, foto=?, categoria_id=? WHERE id=?";
+        String sql = "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, fecha_ingreso=?, foto=?, categoria_id=?, marca_id=? WHERE id=?";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -56,10 +59,11 @@ public class ProductoDAO {
             stmt.setString(2, producto.getDescripcion());
             stmt.setInt(3, producto.getCantidad());
             stmt.setDouble(4, producto.getPrecio());
-            stmt.setString(5, producto.getFechaIngreso());
+            stmt.setDate(5, producto.getFechaIngreso());
             stmt.setString(6, producto.getFoto());
             stmt.setInt(7, producto.getCategoria().getId());
-            stmt.setInt(8, producto.getId());
+            stmt.setInt(8, producto.getMarca().getId());
+            stmt.setInt(9, producto.getId());
 
             // Ejecutar el UPDATE
             return stmt.executeUpdate() > 0;
@@ -108,13 +112,19 @@ public class ProductoDAO {
                 p.setDescripcion(rs.getString("descripcion"));
                 p.setCantidad(rs.getInt("cantidad"));
                 p.setPrecio(rs.getDouble("precio"));
-                p.setFechaIngreso(rs.getString("fecha_ingreso"));
+                Date fecha = rs.getDate("fecha_ingreso"));
+                p.setFechaIngreso(fecha);
                 p.setFoto(rs.getString("foto"));
 
                 // Crear objeto categoría con solo el ID
                 Categoria c = new Categoria();
                 c.setId(rs.getInt("categoria_id"));
                 p.setCategoria(c);
+                
+                Marca m = new Marca();
+                m.setId(rs.getInt("marca_id"));
+                p.setMarca(m);
+                
 
                 // Agregar el producto a la lista
                 lista.add(p);
@@ -146,7 +156,8 @@ public class ProductoDAO {
                 p.setDescripcion(rs.getString("descripcion"));
                 p.setCantidad(rs.getInt("cantidad"));
                 p.setPrecio(rs.getDouble("precio"));
-                p.setFechaIngreso(rs.getString("fecha_ingreso"));
+                Date fecha = rs.getDate("fecha_ingreso");
+                p.setFechaIngreso(fecha);
                 p.setFoto(rs.getString("foto"));
 
                 Categoria c = new Categoria();
