@@ -1,18 +1,25 @@
 package systems_store.mundo.java;
 
-
 public class Marca{
 	private int id;
-	private String tipoMarca;
+	private String nombre, descripcion;
 	
-	public Marca( int id, String tipoMarca) {
+	public Marca(int id, String nombre, String descripcion) {
 		this.id = id;
-		this.tipoMarca = tipoMarca;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
 	}
 
 	public int getId() {return id;}
 	public void setId(int id) {this.id = id;}
 
-	public String getTipoMarca() {return tipoMarca;}
-	public void setTipoMarca(String tipoMarca) {this.tipoMarca = tipoMarca;}
+	public String getNombre() {return nombre;}
+	public void setNombre(String nombre) {this.nombre = nombre;}
+	
+	public String getDescripcion() {return descripcion;}
+	public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
+	
+	public String toString() {
+		return nombre;
+	}
 }
