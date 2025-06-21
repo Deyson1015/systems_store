@@ -9,36 +9,45 @@ public class Producto {
 	private double precio;
 	private Date fechaIngreso;
 	private String nombre, descripcion, foto;
-	private Categoria categoria;
 	private Marca marca;
+	
+	
+	public Producto(int id, int pCantidad, double pPrecio, Date pFechaIngreso, String pNombre, String pDescripcion,
+			String pFoto, Marca pMarca) {
+		this.id = id;
+		this.cantidad = pCantidad;
+		this.precio = pPrecio;
+		this.fechaIngreso = pFechaIngreso;
+		this.nombre = pNombre;
+		this.descripcion = pDescripcion;
+		this.foto = pFoto;
+		this.marca = pMarca;
+	}
 	
 	public int getId() { return id;}
 	public void setId(int id) { this.id = id;}
 	
 	public String getNombre() { return nombre;}
-	public void setNombre(String nombre) { this.nombre = nombre;}
+	public void setNombre(String pNombre) { this.nombre = pNombre;}
 	
 	public String getDescripcion() { return descripcion;}
-	public void setDescripcion(String descripcion) { this.descripcion = descripcion;}
+	public void setDescripcion(String pDescripcion) { this.descripcion = pDescripcion;}
 	
 	public int getCantidad() { return cantidad;}
-	public void setCantidad(int cantidad) { this.cantidad = cantidad;}
+	public void setCantidad(int pCantidad) { this.cantidad = pCantidad;}
 	
 	public double getPrecio() { return precio;}
-	public void setPrecio(double precio) { this.precio = precio;}
+	public void setPrecio(double pPrecio) { this.precio = pPrecio;}
 	
 	public Date getFechaIngreso() { return fechaIngreso;}
-	public void setFechaIngreso( Date fechaIngreso) {this.fechaIngreso = fechaIngreso;}
+	public void setFechaIngreso( Date pFechaIngreso) {this.fechaIngreso = pFechaIngreso;}
 	
 	public String getFoto() { return foto;}
-	public void setFoto(String foto) { this.foto = foto;}
-	
-	public Categoria getCategoria() { return categoria;}
-	public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+	public void setFoto(String pFoto) { this.foto = pFoto;}
 	 	 	
 	public Marca getMarca() { return marca;}
-	public void setMarca( Marca marca) { this.marca = marca;}
-			
+	public void setMarca( Marca pMarca) { this.marca = pMarca;}
+		
 }
 	
 	
