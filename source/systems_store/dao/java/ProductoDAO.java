@@ -7,7 +7,6 @@ import java.util.List;
 
 // Importación de las clases del modelo y la conexión
 import systems_store.mundo.java.Producto;
-import systems_store.mundo.java.Categoria;
 import systems_store.mundo.java.Marca;
 import systems_store.conexion.java.Conexion;
 
@@ -20,7 +19,7 @@ public class ProductoDAO {
      * @return true si se insertó correctamente, false si hubo un error.
      */
     public boolean agregarProducto(Producto producto) {
-        String sql = "INSERT INTO productos(nombre, descripcion, cantidad, precio, fecha_ingreso, foto, categoria_id, marca_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO productos(nombre,marca_id, descripcion, cantidad, precio, fecha_ingreso, foto) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConexion();  // Obtener la conexión
              PreparedStatement stmt = conn.prepareStatement(sql)) {  // Preparar sentencia SQL
 
@@ -31,8 +30,7 @@ public class ProductoDAO {
             stmt.setDouble(4, producto.getPrecio());
             stmt.setDate(5, producto.getFechaIngreso()); 
             stmt.setString(6, producto.getFoto());
-            stmt.setInt(7, producto.getCategoria().getId());
-            stmt.setInt(8, producto.getMarca().getId());
+            stmt.setInt(7, producto.getMarca().getId());
             
 
             // Ejecutar el INSERT y devolver si se insertó al menos una fila
@@ -50,20 +48,18 @@ public class ProductoDAO {
      * @return true si se actualizó correctamente, false si hubo un error.
      */
     public boolean actualizarProducto(Producto producto) {
-        String sql = "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, fecha_ingreso=?, foto=?, categoria_id=?, marca_id=? WHERE id=?";
+        String sql = "UPDATE productos SET nombre=?, id_marca=?, cantidad=?, precio=?, fecha_ingreso=?, foto=? WHERE id=?";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             // Asignar valores a los parámetros
             stmt.setString(1, producto.getNombre());
-            stmt.setString(2, producto.getDescripcion());
-            stmt.setInt(3, producto.getCantidad());
-            stmt.setDouble(4, producto.getPrecio());
-            stmt.setDate(5, producto.getFechaIngreso());
-            stmt.setString(6, producto.getFoto());
-            stmt.setInt(7, producto.getCategoria().getId());
-            stmt.setInt(8, producto.getMarca().getId());
-            stmt.setInt(9, producto.getId());
+            stmt.setInt(2, producto.getCantidad());
+            stmt.setDouble(3, producto.getPrecio());
+            stmt.setDate(4, producto.getFechaIngreso());
+            stmt.setString(5, producto.getFoto());
+            stmt.setInt(6, producto.getMarca().getId());
+            stmt.setInt(7, producto.getId());
 
             // Ejecutar el UPDATE
             return stmt.executeUpdate() > 0;
@@ -99,7 +95,18 @@ public class ProductoDAO {
      */
     public List<Producto> listarProductos() {
         List<Producto> lista = new ArrayList<>();
-        String sql = "SELECT * FROM productos";
+        String sql =  "SELECT "
+        	    + "p.id, "
+        	    + "p.nombre, "
+        	    + "c.nombre AS nombre_categoria, "
+        	    + "p.precio, "
+        	    + "p.fecha_ingreso, "
+        	    + "p.foto, "
+        	    + "c.descripcion AS descripcion_categoria, "
+        	    + "m.nombre AS nombre_marca, "
+        	    + "m.descripcion AS descripcion_marca "
+        	    + "FROM productos AS p "
+        	    + "JOIN marcas AS m ON p.id_marca = m.id";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -109,23 +116,15 @@ public class ProductoDAO {
                 Producto p = new Producto();
                 p.setId(rs.getInt("id"));
                 p.setNombre(rs.getString("nombre"));
-                p.setDescripcion(rs.getString("descripcion"));
+                // Crear objeto categoría con solo el ID
+                Marca m = new Marca(rs.getInt("id_marca"),null, null);
+                p.setMarca(m); 
+                
                 p.setCantidad(rs.getInt("cantidad"));
                 p.setPrecio(rs.getDouble("precio"));
                 Date fecha = (rs.getDate("fecha_ingreso"));
                 p.setFechaIngreso(fecha);
                 p.setFoto(rs.getString("foto"));
-
-                // Crear objeto categoría con solo el ID
-                Categoria c = new Categoria(rs.getInt("categoria_id"), null);
-                p.setCategoria(c);
-
-
-                
-                Marca m = new Marca(rs.getInt("marca_id"),null);
-                p.setMarca(m); 
-                
-
                 // Agregar el producto a la lista
                 lista.add(p);
             }
@@ -159,9 +158,8 @@ public class ProductoDAO {
                 Date fecha = rs.getDate("fecha_ingreso");
                 p.setFechaIngreso(fecha);
                 p.setFoto(rs.getString("foto"));
-
-                Categoria c = new Categoria(rs.getInt("categoria_id"), null);
-                p.setCategoria(c); 
+                Marca m = new Marca(rs.getInt("id_marca"),null, null);
+                p.setMarca(m); 
 
                 return p;
             }
