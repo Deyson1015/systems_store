@@ -113,7 +113,7 @@ public class ProductoDAO {
 
             // Iterar sobre los resultados y construir objetos Producto
             while (rs.next()) {
-                Producto p = new Producto();
+                Producto p = new Producto(0, 0, 0, null, sql, sql, sql, null);
                 p.setId(rs.getInt("id"));
                 p.setNombre(rs.getString("nombre"));
                 // Crear objeto categoría con solo el ID
@@ -149,7 +149,7 @@ public class ProductoDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Producto p = new Producto();
+                Producto p = new Producto(id, id, id, null, sql, sql, sql, null);
                 p.setId(rs.getInt("id"));
                 p.setNombre(rs.getString("nombre"));
                 p.setDescripcion(rs.getString("descripcion"));
