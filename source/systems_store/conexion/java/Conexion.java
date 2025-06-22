@@ -9,6 +9,14 @@ public class Conexion {
 	private static final String USER = "root";
 	private static final String PASS = "";
 	
+	static {
+        try {
+            // Cargar el driver JDBC de MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver no encontrado: " + e.getMessage());
+        }
+    }
 	public static Connection getConexion() {
 		
 		try {

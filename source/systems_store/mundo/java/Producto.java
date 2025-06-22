@@ -11,15 +11,14 @@ public class Producto {
 	private String nombre, descripcion, foto;
 	private Marca marca;
 	
-	
-	public Producto(int id, int pCantidad, double pPrecio, Date pFechaIngreso, String pNombre, String pDescripcion,
+	public Producto(int id, String pNombre,  String pDescripcion, int pCantidad, double pPrecio, Date pFechaIngreso,
 			String pFoto, Marca pMarca) {
 		this.id = id;
+		this.nombre = pNombre;
+		this.descripcion = pDescripcion;
 		this.cantidad = pCantidad;
 		this.precio = pPrecio;
 		this.fechaIngreso = pFechaIngreso;
-		this.nombre = pNombre;
-		this.descripcion = pDescripcion;
 		this.foto = pFoto;
 		this.marca = pMarca;
 	}
