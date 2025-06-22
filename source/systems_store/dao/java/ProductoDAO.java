@@ -28,7 +28,7 @@ public class ProductoDAO {
             stmt.setString(2, producto.getDescripcion());
             stmt.setInt(3, producto.getCantidad());
             stmt.setDouble(4, producto.getPrecio());
-            stmt.setDate(5, producto.getFechaIngreso());
+            stmt.setDate(5, producto.getFechaIngreso()); 
             stmt.setString(6, producto.getFoto());
             stmt.setInt(7, producto.getMarca().getId());
             
