@@ -7,7 +7,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File; 
+import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 
 public class InterfazTienda extends JFrame {
@@ -15,6 +16,7 @@ public class InterfazTienda extends JFrame {
     private JPanel panelProductos;
     private JTextField txtBuscar;
     private ProductoDAO productoDAO;
+    private List<Producto> listaProductos;
 
     public InterfazTienda() {
         setTitle("Systems Store");
@@ -23,7 +25,7 @@ public class InterfazTienda extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        productoDAO = new ProductoDAO(); // Conexión con backend
+        productoDAO = new ProductoDAO();
 
         construirEncabezado();
         construirPanelProductos();
@@ -46,7 +48,10 @@ public class InterfazTienda extends JFrame {
         txtBuscar.setPreferredSize(new Dimension(200, 30));
 
         JButton btnAgregar = new JButton("Agregar");
+        btnAgregar.addActionListener(e -> new FormularioProducto(this, this, null)); 
+
         JButton btnOrdenar = new JButton("Ordenar");
+        btnOrdenar.addActionListener(e -> mostrarOpcionesOrdenamiento());
 
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         acciones.setOpaque(false);
@@ -70,9 +75,13 @@ public class InterfazTienda extends JFrame {
         add(scroll, BorderLayout.CENTER);
     }
 
-    private void cargarProductosDesdeBD() {
+    public void cargarProductosDesdeBD() {
+        listaProductos = productoDAO.listarProductos();
+        mostrarProductos(listaProductos);
+    }
+
+    private void mostrarProductos(List<Producto> lista) {
         panelProductos.removeAll();
-        List<Producto> lista = productoDAO.listarProductos();
         for (Producto p : lista) {
             cargarProducto(p);
         }
@@ -134,16 +143,44 @@ public class InterfazTienda extends JFrame {
         });
 
         actualizar.addActionListener(e -> {
-            // Aquí iría tu JFrame para actualizar producto
-            JOptionPane.showMessageDialog(this, "Función de actualizar.");
-        });
+            new FormularioProducto(this, this, producto);
+        }); 
 
         opciones.add(actualizar);
         opciones.add(eliminar);
         opciones.show(this, getWidth() / 2, getHeight() / 2);
     }
 
+    private void mostrarOpcionesOrdenamiento() {
+        String[] opciones = {"Nombre (A-Z)", "Nombre (Z-A)", "Precio (menor a mayor)", "Precio (mayor a menor)"};
+        String seleccion = (String) JOptionPane.showInputDialog(this,
+                "Ordenar productos por:",
+                "Ordenar",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]);
+
+        if (seleccion != null) {
+            switch (seleccion) {
+                case "Nombre (A-Z)":
+                    listaProductos.sort(Comparator.comparing(Producto::getNombre));
+                    break;
+                case "Nombre (Z-A)":
+                    listaProductos.sort(Comparator.comparing(Producto::getNombre).reversed());
+                    break;
+                case "Precio (menor a mayor)":
+                    listaProductos.sort(Comparator.comparingDouble(Producto::getPrecio));
+                    break;
+                case "Precio (mayor a menor)":
+                    listaProductos.sort(Comparator.comparingDouble(Producto::getPrecio).reversed());
+                    break;
+            }
+            mostrarProductos(listaProductos);
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(InterfazTienda::new);
     }
-}
+} 
