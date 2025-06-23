@@ -1,14 +1,14 @@
-package systems_store.interfaz.java;
+package systems_store.interfaz;
 
-import systems_store.dao.java.ProductoDAO;
-import systems_store.mundo.java.Producto;
+import systems_store.dao.ProductoDAO;
+import systems_store.mundo.Producto;
+import systems_store.mundo.Tienda;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.Comparator;
 import java.util.List;
 
 public class InterfazTienda extends JFrame {
@@ -95,7 +95,8 @@ public class InterfazTienda extends JFrame {
         card.setBackground(Color.WHITE);
 
         JLabel lblImagen;
-        File imgFile = new File(producto.getFoto());
+        String rutaImagen = "data/imagenes/" + producto.getFoto();
+        File imgFile = new File(rutaImagen);
         if (imgFile.exists()) {
             ImageIcon icon = new ImageIcon(producto.getFoto());
             Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
@@ -152,7 +153,11 @@ public class InterfazTienda extends JFrame {
     }
 
     private void mostrarOpcionesOrdenamiento() {
-        String[] opciones = {"Nombre (A-Z)", "Nombre (Z-A)", "Precio (menor a mayor)", "Precio (mayor a menor)"};
+        String[] opciones = {
+        		"Nombre (A-Z)", "Nombre (Z-A)",
+				"Precio (menor a mayor)", "Precio (mayor a menor)",
+				"Cantidad (menor a mayor)", "Cantidad (mayor a menor)",
+				"Fecha de ingreso (más reciente)", "Fecha de ingreso (más antiguo)"};
         String seleccion = (String) JOptionPane.showInputDialog(this,
                 "Ordenar productos por:",
                 "Ordenar",
@@ -162,21 +167,33 @@ public class InterfazTienda extends JFrame {
                 opciones[0]);
 
         if (seleccion != null) {
-            switch (seleccion) {
-                case "Nombre (A-Z)":
-                    listaProductos.sort(Comparator.comparing(Producto::getNombre));
-                    break;
-                case "Nombre (Z-A)":
-                    listaProductos.sort(Comparator.comparing(Producto::getNombre).reversed());
-                    break;
-                case "Precio (menor a mayor)":
-                    listaProductos.sort(Comparator.comparingDouble(Producto::getPrecio));
-                    break;
-                case "Precio (mayor a menor)":
-                    listaProductos.sort(Comparator.comparingDouble(Producto::getPrecio).reversed());
-                    break;
+        	
+        	 // Preguntar si desea orden descendente
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Deseas ordenar de manera descendente?",
+                    "Confirmar orden",
+                    JOptionPane.YES_NO_OPTION);
+
+            boolean descendente = (confirm == JOptionPane.YES_OPTION);
+            
+            String criterio = "";
+            if (seleccion.contains("Nombre")) {
+                criterio = "nombre";
+            } else if (seleccion.contains("Precio")) {
+                criterio = "precio";
+            } else if (seleccion.contains("Cantidad")) {
+                criterio = "cantidad";
+            } else if (seleccion.contains("Fecha")) {
+                criterio = "fecha";
             }
-            mostrarProductos(listaProductos);
+
+            // Llamar al método de ordenamiento de Tienda
+          Tienda.ordenar(listaProductos, criterio, descendente);
+          
+          mostrarProductos(listaProductos);
+          
+        } else {
+            JOptionPane.showMessageDialog(this, "No se seleccionó ninguna opción.");
         }
     }
 

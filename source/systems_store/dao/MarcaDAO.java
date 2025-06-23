@@ -1,8 +1,7 @@
-package systems_store.dao.java;
+package systems_store.dao;
 
-import systems_store.conexion.java.Conexion;
-import systems_store.mundo.java.Marca;
-
+import systems_store.conexion.Conexion;
+import systems_store.mundo.Marca;
 
 import java.sql.*;
 import java.util.ArrayList;

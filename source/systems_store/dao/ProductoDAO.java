@@ -1,14 +1,13 @@
-package systems_store.dao.java;
+package systems_store.dao;
 
 // Importación de clases necesarias para trabajar con la base de datos y colecciones
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// Importación de las clases del modelo y la conexión
-import systems_store.mundo.java.Producto;
-import systems_store.mundo.java.Marca;
-import systems_store.conexion.java.Conexion;
+import systems_store.conexion.Conexion;
+import systems_store.mundo.Marca;
+import systems_store.mundo.Producto;
 
 // Clase que se encarga de acceder a la base de datos para realizar operaciones CRUD con productos
 public class ProductoDAO {

@@ -1,4 +1,4 @@
-package systems_store.mundo.java;
+package systems_store.mundo;
 /**
  * Clase que representa un producto almacenado en la tienda.<br> 
  */

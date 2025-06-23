@@ -1,8 +1,8 @@
-package systems_store.interfaz.java;
+package systems_store.interfaz;
 
-import systems_store.dao.java.ProductoDAO;
-import systems_store.mundo.java.Marca;
-import systems_store.mundo.java.Producto;
+import systems_store.dao.ProductoDAO;
+import systems_store.mundo.Marca;
+import systems_store.mundo.Producto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ public class FormularioProducto extends JDialog {
         add(txtFoto);
 
         add(new JLabel("Marca:"));
-        cmbMarca = new JComboBox<>(new String[]{"Samsung", "Apple", "Xiaomi"});
+        cmbMarca = new JComboBox<>(new String[]{"Samsung", "Apple", "Xiaomi", "Oppo", "Vivo", "Honor", "Huawei"});
         add(cmbMarca);
 
         btnGuardar = new JButton("Guardar");

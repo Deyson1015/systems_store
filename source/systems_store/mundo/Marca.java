@@ -1,4 +1,4 @@
-package systems_store.mundo.java;
+package systems_store.mundo;
 
 public class Marca{
 	private int id;

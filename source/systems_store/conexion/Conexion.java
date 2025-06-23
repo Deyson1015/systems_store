@@ -1,4 +1,4 @@
-package systems_store.conexion.java;
+package systems_store.conexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
