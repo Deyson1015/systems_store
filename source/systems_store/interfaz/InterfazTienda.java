@@ -48,7 +48,7 @@ public class InterfazTienda extends JFrame {
         txtBuscar.setPreferredSize(new Dimension(200, 30));
 
         JButton btnAgregar = new JButton("Agregar");
-        btnAgregar.addActionListener(e -> new FormularioProducto(this, this, null)); 
+        btnAgregar.addActionListener(e -> new FormularioProducto( this, null)); 
 
         JButton btnOrdenar = new JButton("Ordenar");
         btnOrdenar.addActionListener(e -> mostrarOpcionesOrdenamiento());
@@ -67,7 +67,7 @@ public class InterfazTienda extends JFrame {
 
     private void construirPanelProductos() {
         panelProductos = new JPanel();
-        panelProductos.setLayout(new GridLayout(0, 3, 20, 20));
+        panelProductos.setLayout(new GridLayout(0, 5, 20, 20));
         panelProductos.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JScrollPane scroll = new JScrollPane(panelProductos);
@@ -92,35 +92,41 @@ public class InterfazTienda extends JFrame {
     public void cargarProducto(Producto producto) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        card.setPreferredSize(new Dimension(150, 200));
         card.setBackground(Color.WHITE);
 
         JLabel lblImagen;
         String rutaImagen = "data/imagenes/" + producto.getFoto();
         File imgFile = new File(rutaImagen);
         if (imgFile.exists()) {
-            ImageIcon icon = new ImageIcon(producto.getFoto());
-            Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(rutaImagen);
+            Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
             lblImagen = new JLabel(new ImageIcon(img));
         } else {
             lblImagen = new JLabel("Sin imagen", SwingConstants.CENTER);
         }
 
-        JLabel lblNombre = new JLabel(producto.getNombre());
-        JLabel lblPrecio = new JLabel("$" + producto.getPrecio());
+        JLabel lblNombre = new JLabel("Nombre: " + producto.getNombre());
+        JLabel lblMarca = new JLabel("Marca: " + producto.getMarca().getNombre());
+        JLabel lblPrecio = new JLabel("Precio: " + "$ " + producto.getPrecio());
+        JLabel lblCantidad = new JLabel("Cantidad: " + producto.getCantidad());
 
         JButton btnVerMas = new JButton(" Ver más");
         btnVerMas.addActionListener(e -> mostrarOpciones(producto));
 
         JPanel info = new JPanel(new GridLayout(0, 1));
-        info.setBorder(new EmptyBorder(5, 5, 5, 5));
+        info.setBorder(new EmptyBorder(2, 2, 2, 2));
         info.add(lblNombre);
+        info.add(lblMarca);
         info.add(lblPrecio);
+        info.add(lblCantidad);
         info.add(btnVerMas);
 
         card.add(lblImagen, BorderLayout.CENTER);
         card.add(info, BorderLayout.SOUTH);
 
         panelProductos.add(card);
+      
     }
 
     private void mostrarOpciones(Producto producto) {
@@ -144,7 +150,7 @@ public class InterfazTienda extends JFrame {
         });
 
         actualizar.addActionListener(e -> {
-            new FormularioProducto(this, this, producto);
+            new FormularioProducto(this, producto);
         }); 
 
         opciones.add(actualizar);
@@ -154,10 +160,10 @@ public class InterfazTienda extends JFrame {
 
     private void mostrarOpcionesOrdenamiento() {
         String[] opciones = {
-        		"Nombre (A-Z)", "Nombre (Z-A)",
-				"Precio (menor a mayor)", "Precio (mayor a menor)",
-				"Cantidad (menor a mayor)", "Cantidad (mayor a menor)",
-				"Fecha de ingreso (más reciente)", "Fecha de ingreso (más antiguo)"};
+        		"Nombre",
+				"Precio",
+				"Cantidad",
+				"Fecha de ingreso "};
         String seleccion = (String) JOptionPane.showInputDialog(this,
                 "Ordenar productos por:",
                 "Ordenar",

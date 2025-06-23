@@ -96,7 +96,7 @@ public class ProductoDAO {
      */
     public List<Producto> listarProductos() {
         List<Producto> lista = new ArrayList<>();
-        String sql = "SELECT p.nombre, p.precio, p.foto, m.nombre AS nombre_marca " +
+        String sql = "SELECT p.nombre, p.precio, p.cantidad, p.foto, m.nombre AS nombre_marca " +
         	"FROM productos AS p " +
         	"JOIN marcas AS m ON p.id_marca = m.id"
 
@@ -108,19 +108,18 @@ public class ProductoDAO {
             // Iterar sobre los resultados y construir objetos Producto
             while (rs.next()) {
             	  Marca m = new Marca(
-                		rs.getInt("id"),
-                		rs.getString("nombre"),
-                		rs.getString("descripcion")
+                		0,
+                		rs.getString("nombre_marca"),
+                		""
                    );
                
-                              
             	  Producto p = new Producto(
-                      	rs.getInt("id"),
+                      	0,
                       	rs.getString("nombre"),
-                      	rs.getString("descripcion"),
+                      	"",
                       	rs.getInt("cantidad"),
                       	rs.getDouble("precio"),
-                      	rs.getDate("fecha_ingreso"),
+                      	null,
                       	rs.getString("foto"),
                       	m
                   );
