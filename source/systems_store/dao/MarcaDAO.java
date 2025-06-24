@@ -15,8 +15,8 @@ public  class MarcaDAO {
 		String sql = "SELECT id, nombre FROM marcas"; 
 		
 		try (Connection conn = Conexion.getConexion();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+				ResultSet rs = stmt.executeQuery(sql);
 			
 			while (rs.next()) {
 				

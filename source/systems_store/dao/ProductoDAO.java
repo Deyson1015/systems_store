@@ -105,7 +105,6 @@ public class ProductoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
-            // Iterar sobre los resultados y construir objetos Producto
             while (rs.next()) {
             	  Marca m = new Marca(
                 		rs.getInt("id_marca"),
