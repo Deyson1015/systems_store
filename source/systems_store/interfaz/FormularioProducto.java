@@ -17,29 +17,45 @@ import com.toedter.calendar.JDateChooser;
 import java.sql.Date;
 import java.util.List;
 
-public class FormularioProducto extends JDialog implements ActionListener {
+/**
+ * Formulario para agregar o editar un producto.
+ */
 
+public class FormularioProducto extends JDialog implements ActionListener {
+	
+
+    // Constantes para los comandos de los botones
     private final static String GUARDAR = "Guardar";
     private final static String SELECCIONAR = "Seleccionar";
-
+    
+    // Referencia a la ventana principal 
     private InterfazTienda principal;
-
+    
+    // Componentes del formulario
     private JTextField txtNombre, txtDescripcion, txtCantidad, txtPrecio, txtFoto;
     private JDateChooser txtFecha;
     private JComboBox<String> cmbMarca;
     private Producto productoExistente;
     private JButton btnAgregar, btnCancelar, btnSeleccionar;
-
+    
+    
+    /**
+     * Constructor para crear o editar un producto.
+     * @param principal ventana principal de la aplicación
+     * @param productoExistente producto a editar
+     */
     public FormularioProducto(InterfazTienda principal, Producto productoExistente) {
         this.principal = principal;
         this.productoExistente = productoExistente;
 
+        // Configuración del formulario
         setLayout(new BorderLayout());
         setSize(450, 350);
         setModal(true);
         setLocationRelativeTo(null);
         setTitle("Formulario de producto");
 
+        // Panel para los campos del formulario
         JPanel panelInfo1 = new JPanel();
         panelInfo1.setLayout(new GridLayout(8, 2, 5, 5));
         panelInfo1.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -70,7 +86,8 @@ public class FormularioProducto extends JDialog implements ActionListener {
         panelInfo1.add(new JLabel("Fecha ingreso:"));
         txtFecha = new JDateChooser();
         panelInfo1.add(txtFecha);
-
+        
+        // Campo: Foto (ruta del archivo)
         panelInfo1.add(new JLabel("Foto:"));
         JPanel panelAuxiliar = new JPanel(new GridLayout(1, 2));
         txtFoto = new JTextField();
@@ -85,20 +102,20 @@ public class FormularioProducto extends JDialog implements ActionListener {
         // Agregar panel de info al centro
         add(panelInfo1, BorderLayout.CENTER);
 
-        // Botones
+        // Botones inferiores
         btnAgregar = new JButton(GUARDAR);
         btnAgregar.addActionListener(this);
         btnAgregar.setActionCommand(GUARDAR);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(e -> dispose());
+        btnCancelar.addActionListener(e -> dispose()); //Cierra le ventana 
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelBotones.add(btnAgregar);
         panelBotones.add(btnCancelar);
         add(panelBotones, BorderLayout.SOUTH);
 
-        // Cargar datos si se va a editar
+        // Cargar datos si se va a editar, Si se va a editar un producto, llenar los campos con los datos existentes
         if (productoExistente != null) {
             txtNombre.setText(productoExistente.getNombre());
             txtDescripcion.setText(productoExistente.getDescripcion());
@@ -109,9 +126,13 @@ public class FormularioProducto extends JDialog implements ActionListener {
             cmbMarca.setSelectedItem(productoExistente.getMarca().getNombre());
         }
 
+        // Mostrar la ventana
         setVisible(true);
     }
     
+    /**
+     * Carga las marcas desde la base de datos y las agrega al combo.
+     */
     private void cargarMarcas() {
         MarcaDAO marcaDAO = new MarcaDAO();
         List<Marca> marcas = marcaDAO.listar();
@@ -120,10 +141,14 @@ public class FormularioProducto extends JDialog implements ActionListener {
         }
     }
 
+    /**
+     * Maneja los eventos de botones (seleccionar imagen o guardar).
+     */
     public void actionPerformed(ActionEvent pEvento) {
         String comando = pEvento.getActionCommand();
 
 	        if (comando.equals(SELECCIONAR)) {
+	        	// Selección de archivo de imagen
 	            JFileChooser jf = new JFileChooser("./data/imagenes");
 	            jf.setDialogTitle("Seleccionar archivo");
 	            jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -134,6 +159,7 @@ public class FormularioProducto extends JDialog implements ActionListener {
 	                String[] formatosPermitidos = {".jpg", ".png"};
 	                boolean formatoValido = false;
 	
+	                // Verifica que el archivo tenga una extensión permitida
 	                for (String ext : formatosPermitidos) {
 	                    if (nombre.endsWith(ext)) {
 	                        formatoValido = true;
@@ -142,12 +168,13 @@ public class FormularioProducto extends JDialog implements ActionListener {
 	                }
 	
 	                if (formatoValido) {
-	                    txtFoto.setText(nombre);
+	                    txtFoto.setText(nombre);// Muestra la imagen seleccionada
 	                } else {
 	                    JOptionPane.showMessageDialog(this, "Debe seleccionar un archivo en formato .jpg.", "Seleccionar imagen", JOptionPane.ERROR_MESSAGE);
 	                }
 	            }
 	        }  else if (comando.equals(GUARDAR)) {
+	        	// Recolectar los datos del formulario
 	            String nombre = txtNombre.getText().trim();
 	            String marcaSeleccionada = (String) cmbMarca.getSelectedItem();
 	            String descripcion = txtDescripcion.getText().trim();
@@ -189,8 +216,11 @@ public class FormularioProducto extends JDialog implements ActionListener {
 	            }
 	
 	            Date fechaIngreso = new Date(txtFecha.getDate().getTime());
+	            
+	            // Obtener objeto Marca desde el nombre
 	            Marca marca = new MarcaDAO().obtenerMarcaPorNombre(marcaSeleccionada);
 	
+	            // Crear el objeto Producto
 	            Producto p = new Producto(
 	                    productoExistente != null ? productoExistente.getId() : 0,
 	                    nombre,
@@ -202,6 +232,7 @@ public class FormularioProducto extends JDialog implements ActionListener {
 	                    marca
 	            );
 	
+	            // Guardar en la base de datos
 	            ProductoDAO dao = new ProductoDAO();
 	            boolean exito = (productoExistente == null) ? dao.agregarProducto(p) : dao.actualizarProducto(p);
 	

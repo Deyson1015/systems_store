@@ -13,28 +13,48 @@ import java.util.List;
 
 public class InterfazTienda extends JFrame {
 
+	
+
+    // Panel donde se muestran los productos
     private JPanel panelProductos;
+    
+    // Campo de búsqueda
     private JTextField txtBuscar;
+
+    // Acceso a la base de datos
     private ProductoDAO productoDAO;
+    
+
+    // Lista de productos cargada desde la base de datos
     private List<Producto> listaProductos;
 
+    
+    /**
+     * Interfaz principal de la aplicación Systems Store.
+     * Muestra los productos como tarjetas, permite agregarlos, editarlos, eliminarlos y ordenarlos.
+     */
     public InterfazTienda() {
         setTitle("Systems Store");
         setSize(1000, 700);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);//Cierre la aplicación
+        setLocationRelativeTo(null);//Centra la ventana 
         setLayout(new BorderLayout());
 
-        productoDAO = new ProductoDAO();
+        productoDAO = new ProductoDAO();//DAO para manejar productos
 
         construirEncabezado();
         construirPanelProductos();
 
         cargarProductosDesdeBD();
 
-        setVisible(true);
+        setVisible(true); // Muestra la ventana
     }
 
+    
+
+    /**
+     * Crea el encabezado (barra superior) con título y botones.
+     */
     private void construirEncabezado() {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(new Color(25, 118, 210));
@@ -44,12 +64,19 @@ public class InterfazTienda extends JFrame {
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitulo.setForeground(Color.WHITE);
 
+        
+        // Botón para agregar un nuevo producto
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(e -> new FormularioProducto( this, null)); 
 
+        
+
+        // Botón para ordenar productos
         JButton btnOrdenar = new JButton("Ordenar");
         btnOrdenar.addActionListener(e -> mostrarOpcionesOrdenamiento());
 
+        
+        // Panel para los botones (alineado a la derecha)
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         acciones.setOpaque(false);
         acciones.add(btnOrdenar);
@@ -58,9 +85,13 @@ public class InterfazTienda extends JFrame {
         header.add(lblTitulo, BorderLayout.WEST);
         header.add(acciones, BorderLayout.EAST);
 
-        add(header, BorderLayout.NORTH);
+        add(header, BorderLayout.NORTH); // Agrega encabezado arriba
     }
 
+    
+    /**
+     * Crea el área donde se mostrarán los productos.
+     */
     private void construirPanelProductos() {
         panelProductos = new JPanel();
         panelProductos.setLayout(new GridBagLayout());
@@ -70,14 +101,23 @@ public class InterfazTienda extends JFrame {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         add(scroll, BorderLayout.CENTER);
     }
+
     
+    /**
+     * Carga productos desde la base de datos y los muestra en pantalla.
+     */
     public void cargarProductosDesdeBD() {
         listaProductos = productoDAO.listarProductos();
         mostrarProductos(listaProductos);
     }
 
+    
+
+    /**
+     * Muestra las tarjetas de productos en el panel.
+     */
     private void mostrarProductos(List<Producto> lista) {
-    	 panelProductos.removeAll();
+    	 panelProductos.removeAll();// Limpia productos actuales
     	    
     	    GridBagConstraints gbc = new GridBagConstraints();
     	    gbc.insets = new Insets(10, 10, 10, 10); 
@@ -103,6 +143,10 @@ public class InterfazTienda extends JFrame {
     	    panelProductos.repaint();
     }
 
+    
+    /**
+     * Crea una tarjeta visual con la información del producto.
+     */
     private JPanel crearTarjetaProducto(Producto producto) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(160, 280));
@@ -128,11 +172,15 @@ public class InterfazTienda extends JFrame {
 
         lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
         panelImagen.add(lblImagen);
-
+        
+       
+        // Información textual del producto
         JLabel lblNombre = new JLabel("Nombre: " + producto.getNombre());
         JLabel lblMarca = new JLabel("Marca: " + producto.getMarca().getNombre());
         JLabel lblPrecio = new JLabel("Precio: $ " + producto.getPrecio());
 
+        
+     // Botón "Ver más" para mostrar detalles en otra ventana
         JButton btnVerMas = new JButton("Ver más");
         btnVerMas.addActionListener(e -> {
 	        InformacionProducto informacionProductoPanel = new InformacionProducto();
@@ -145,7 +193,7 @@ public class InterfazTienda extends JFrame {
 	                producto.getMarca().getNombre(),
 	                producto.getFoto()
 	        );
-	        // Crear un JDialog para mostrar la información en una ventana modal
+	        // Crear un JDialog para mostrar la información en una ventana 
 	        JDialog dialog = new JDialog();
 	        dialog.setTitle("Información del Producto");
 	        dialog.setSize(500, 350);
@@ -155,9 +203,13 @@ public class InterfazTienda extends JFrame {
 	        dialog.setVisible(true);
         });
         
+        
+        // Botón de opciones (actualizar, eliminar)
         JButton btnOpciones = new JButton("Opciones");
         btnOpciones.addActionListener(e -> mostrarOpciones(producto));
 
+        
+        // Panel para texto + botones
         JPanel info = new JPanel(new GridLayout(0, 1));
         info.setBorder(new EmptyBorder(2, 5, 2, 5));
         info.add(lblNombre);
@@ -174,6 +226,10 @@ public class InterfazTienda extends JFrame {
 
 
 
+    
+    /**
+     * Muestra un menú de opciones (actualizar o eliminar producto).
+     */
     private void mostrarOpciones(Producto producto) {
         JPopupMenu opciones = new JPopupMenu();
         JMenuItem eliminar = new JMenuItem("Eliminar");
@@ -187,7 +243,7 @@ public class InterfazTienda extends JFrame {
                 boolean exito = productoDAO.eliminarProducto(producto.getId());
                 if (exito) {
                     JOptionPane.showMessageDialog(this, "Producto eliminado con éxito.");
-                    cargarProductosDesdeBD();
+                    cargarProductosDesdeBD();// Recargar lista
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al eliminar el producto.");
                 }
@@ -200,9 +256,15 @@ public class InterfazTienda extends JFrame {
 
         opciones.add(actualizar);
         opciones.add(eliminar);
+        
+        // Muestra el menú en el centro de la ventana
         opciones.show(this, getWidth() / 2, getHeight() / 2);
     }
 
+    
+    /**
+     * Muestra opciones de ordenamiento al usuario.
+     */
     private void mostrarOpcionesOrdenamiento() {
         String[] opciones = {
         		"Nombre",
@@ -248,6 +310,10 @@ public class InterfazTienda extends JFrame {
         }
     }
 
+    
+    /**
+     * Método principal para la aplicación.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(InterfazTienda::new);
     }
