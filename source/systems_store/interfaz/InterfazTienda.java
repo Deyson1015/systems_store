@@ -119,23 +119,32 @@ public class InterfazTienda extends JFrame {
     private void mostrarProductos(List<Producto> lista) {
     	 panelProductos.removeAll();// Limpia productos actuales
     	    
-    	    GridBagConstraints gbc = new GridBagConstraints();
-    	    gbc.insets = new Insets(10, 10, 10, 10); 
-    	    gbc.anchor = GridBagConstraints.NORTHWEST;
+    	 if (lista.isEmpty()) {
+    	        JLabel mensaje = new JLabel("No hay productos para mostrar.");
+    	        mensaje.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    	        mensaje.setForeground(Color.GRAY);
+    	        panelProductos.setLayout(new GridBagLayout()); // Centrar mensaje
+    	        panelProductos.add(mensaje);
+    	    } else {
+    	        panelProductos.setLayout(new GridBagLayout());
+    	        GridBagConstraints gbc = new GridBagConstraints();
+    	        gbc.insets = new Insets(10, 10, 10, 10);
+    	        gbc.anchor = GridBagConstraints.NORTHWEST;
 
-    	    int col = 0;
-    	    int row = 0;
-    	    
-    	    for (Producto p : lista) {
-    	        JPanel tarjeta = crearTarjetaProducto(p); 
-    	        gbc.gridx = col;
-    	        gbc.gridy = row;
-    	        panelProductos.add(tarjeta, gbc);
+    	        int col = 0;
+    	        int row = 0;
 
-    	        col++;
-    	        if (col == 5) {  // Máximo 5 por fila
-    	            col = 0;
-    	            row++;
+    	        for (Producto p : lista) {
+    	            JPanel tarjeta = crearTarjetaProducto(p);
+    	            gbc.gridx = col;
+    	            gbc.gridy = row;
+    	            panelProductos.add(tarjeta, gbc);
+
+    	            col++;
+    	            if (col == 5) {
+    	                col = 0;
+    	                row++;
+    	            }
     	        }
     	    }
 
