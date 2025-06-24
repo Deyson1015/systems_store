@@ -54,8 +54,9 @@ public class FormularioProducto extends JDialog implements ActionListener {
         cargarMarcas();
         panelInfo1.add(cmbMarca);
 
-        panelInfo1.add(new JLabel("Descripción:"));
+        panelInfo1.add(new JLabel("Descripción (Opcional):"));
         txtDescripcion = new JTextField();
+        txtDescripcion.setToolTipText("Este campo puede dejarse vacío si no aplica");
         panelInfo1.add(txtDescripcion);
 
         panelInfo1.add(new JLabel("Cantidad:"));
@@ -160,17 +161,31 @@ public class FormularioProducto extends JDialog implements ActionListener {
             }
 
             Date fechaIngreso = new Date(txtFecha.getDate().getTime());
+            
+            if (!nombre.matches("^[a-zA-Z0-9\\s]+$")) {
+                JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras y números.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } 
+            
+            if (nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || rutaFoto.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor complete todos los campos obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-            if (!nombre.isEmpty() && !descripcion.isEmpty() && !cantidadStr.isEmpty() && !precioStr.isEmpty() && !rutaFoto.isEmpty()){
                 try {
                     int cantidad = Integer.parseInt(cantidadStr);
-                    double precio = Double.parseDouble(precioStr);
+                    int precio = Integer.parseInt(precioStr);
+
+                    if (cantidad < 0 || precio < 0) {
+                        JOptionPane.showMessageDialog(this, "La cantidad y el precio deben ser enteros positivos.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     Marca marca = new MarcaDAO().obtenerMarcaPorNombre(marcaSeleccionada);
 
                     Producto p = new Producto(
                             productoExistente != null ? productoExistente.getId() : 0,
                             nombre,
-                            descripcion,
+                            descripcion.isEmpty() ? null: descripcion,
                             cantidad,
                             precio,
                             fechaIngreso,
@@ -197,3 +212,4 @@ public class FormularioProducto extends JDialog implements ActionListener {
         }
     }
 }
+
