@@ -123,93 +123,97 @@ public class FormularioProducto extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent pEvento) {
         String comando = pEvento.getActionCommand();
 
-        if (comando.equals(SELECCIONAR)) {
-            JFileChooser jf = new JFileChooser("./data/imagenes");
-            jf.setDialogTitle("Seleccionar archivo");
-            jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            jf.setVisible(true);
-
-            if (jf.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                String nombre = jf.getSelectedFile().getName();
-                String[] formatosPermitidos = {".jpg", ".png"};
-                boolean formatoValido = false;
-
-                for (String ext : formatosPermitidos) {
-                    if (nombre.endsWith(ext)) {
-                        formatoValido = true;
-                        break;
-                    }
-                }
-
-                if (formatoValido) {
-                    txtFoto.setText(nombre);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Debe seleccionar un archivo en formato .jpg.", "Seleccionar imagen", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } else if (comando.equals(GUARDAR)) {
-            String nombre = txtNombre.getText();
-            String marcaSeleccionada = (String) cmbMarca.getSelectedItem();
-            String descripcion = txtDescripcion.getText();
-            String cantidadStr = txtCantidad.getText();
-            String precioStr = txtPrecio.getText();
-            String rutaFoto = txtFoto.getText();
-
-            if (txtFecha.getDate() == null) {
-                JOptionPane.showMessageDialog(this, "Seleccione una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Date fechaIngreso = new Date(txtFecha.getDate().getTime());
-            
-            if (!nombre.matches("^[a-zA-Z0-9\\s]+$")) {
-                JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras y números.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            } 
-            
-            if (nombre.isEmpty() || cantidadStr.isEmpty() || precioStr.isEmpty() || rutaFoto.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Por favor complete todos los campos obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-                try {
-                    int cantidad = Integer.parseInt(cantidadStr);
-                    int precio = Integer.parseInt(precioStr);
-
-                    if (cantidad < 0 || precio < 0) {
-                        JOptionPane.showMessageDialog(this, "La cantidad y el precio deben ser enteros positivos.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    Marca marca = new MarcaDAO().obtenerMarcaPorNombre(marcaSeleccionada);
-
-                    Producto p = new Producto(
-                            productoExistente != null ? productoExistente.getId() : 0,
-                            nombre,
-                            descripcion.isEmpty() ? null: descripcion,
-                            cantidad,
-                            precio,
-                            fechaIngreso,
-                            rutaFoto,
-                            marca
-                    );
-
-                    ProductoDAO dao = new ProductoDAO();
-                    boolean exito = (productoExistente == null) ? dao.agregarProducto(p) : dao.actualizarProducto(p);
-
-                    if (exito) {
-                        JOptionPane.showMessageDialog(this, "Producto guardado correctamente");
-                        principal.cargarProductosDesdeBD();
-                        dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Error al guardar el producto");
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Error en los campos numéricos. ", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Por favor complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+	        if (comando.equals(SELECCIONAR)) {
+	            JFileChooser jf = new JFileChooser("./data/imagenes");
+	            jf.setDialogTitle("Seleccionar archivo");
+	            jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	            jf.setVisible(true);
+	
+	            if (jf.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+	                String nombre = jf.getSelectedFile().getName();
+	                String[] formatosPermitidos = {".jpg", ".png"};
+	                boolean formatoValido = false;
+	
+	                for (String ext : formatosPermitidos) {
+	                    if (nombre.endsWith(ext)) {
+	                        formatoValido = true;
+	                        break;
+	                    }
+	                }
+	
+	                if (formatoValido) {
+	                    txtFoto.setText(nombre);
+	                } else {
+	                    JOptionPane.showMessageDialog(this, "Debe seleccionar un archivo en formato .jpg.", "Seleccionar imagen", JOptionPane.ERROR_MESSAGE);
+	                }
+	            }
+	        }  else if (comando.equals(GUARDAR)) {
+	            String nombre = txtNombre.getText().trim();
+	            String marcaSeleccionada = (String) cmbMarca.getSelectedItem();
+	            String descripcion = txtDescripcion.getText().trim();
+	            String cantidadStr = txtCantidad.getText().trim();
+	            String precioStr = txtPrecio.getText().trim();
+	            String rutaFoto = txtFoto.getText().trim();
+	
+	            // Validaciones obligatorias
+	            if (nombre.isEmpty() || marcaSeleccionada == null || cantidadStr.isEmpty() || precioStr.isEmpty() || rutaFoto.isEmpty() || txtFecha.getDate() == null) {
+	                JOptionPane.showMessageDialog(this, "Por favor complete todos los campos obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+	
+	            // Validación nombre
+	            if (!nombre.matches("^[a-zA-Z0-9\\sáéíóúÁÉÍÓÚñÑ]+$")) {
+	                JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras, números y espacios.", "Error", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+	
+	            // Validación cantidad y precio
+	            int cantidad, precio;
+	            try {
+	                cantidad = Integer.parseInt(cantidadStr);
+	                precio = Integer.parseInt(precioStr);
+	
+	                if (cantidad < 0 || precio < 0) {
+	                    JOptionPane.showMessageDialog(this, "La cantidad y el precio deben ser números positivos.", "Error", JOptionPane.ERROR_MESSAGE);
+	                    return;
+	                }
+	            } catch (NumberFormatException ex) {
+	                JOptionPane.showMessageDialog(this, "Cantidad y precio deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+	
+	            // Validación de la foto
+	            if (!rutaFoto.endsWith(".jpg") && !rutaFoto.endsWith(".png")) {
+	                JOptionPane.showMessageDialog(this, "La imagen debe estar en formato .jpg o .png", "Error", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+	
+	            Date fechaIngreso = new Date(txtFecha.getDate().getTime());
+	            Marca marca = new MarcaDAO().obtenerMarcaPorNombre(marcaSeleccionada);
+	
+	            Producto p = new Producto(
+	                    productoExistente != null ? productoExistente.getId() : 0,
+	                    nombre,
+	                    descripcion.isEmpty() ? null : descripcion,
+	                    cantidad,
+	                    precio,
+	                    fechaIngreso,
+	                    rutaFoto,
+	                    marca
+	            );
+	
+	            ProductoDAO dao = new ProductoDAO();
+	            boolean exito = (productoExistente == null) ? dao.agregarProducto(p) : dao.actualizarProducto(p);
+	
+	            if (exito) {
+	                JOptionPane.showMessageDialog(this, "Producto guardado correctamente.");
+	                principal.cargarProductosDesdeBD();
+	                dispose();
+	            } else {
+	                JOptionPane.showMessageDialog(this, "Error al guardar el producto.");
+	            }
+	        }
+	    }
     }
-}
+
 
