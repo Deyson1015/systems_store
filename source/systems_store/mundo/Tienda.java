@@ -14,28 +14,6 @@ public class Tienda {
         }
     }
 	
-	
-	public static Producto buscarProductoPorNombre(List<Producto> productos, String pNombre) {
-		int izquierda = 0;
-    	int derecha = productos.size() -1;
-    	
-    	while (izquierda <= derecha) {
-    		int medio = izquierda + (derecha - izquierda) / 2;
-    		Producto productoMedio = productos.get(medio);
-    		int comparacion = productoMedio.getNombre().compareToIgnoreCase(pNombre);
-    		
-    		if (comparacion == 0) {
-	            return productoMedio;
-	        } else if (comparacion < 0) {
-	            izquierda = medio + 1;
-	        } else {
-	            derecha = medio - 1;
-	        }
-    	}
-    	
-    	return null;
-	}
-	
     /**
      * Estos metodos utilizan el metodo general para ordenar ya sea de forma descendente o ascendente
      */

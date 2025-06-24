@@ -12,7 +12,7 @@ public  class MarcaDAO {
 	public List<Marca> listar() {
 		
 		List<Marca> marcas = new ArrayList<>();
-		String sql = "SELECT id, nombre, descripcion FROM marcas"; 
+		String sql = "SELECT id, nombre FROM marcas"; 
 		
 		try (Connection conn = Conexion.getConexion();
 				Statement stmt = conn.createStatement();
@@ -22,8 +22,7 @@ public  class MarcaDAO {
 				
 				Marca m = new Marca(
 						rs.getInt("id"),
-						rs.getString("nombre"),
-						rs.getString("descripcion")
+						rs.getString("nombre")
 					);
 				marcas.add(m);
 			}
@@ -45,8 +44,7 @@ public  class MarcaDAO {
 	        if (rs.next()) {
 	            return new Marca(
 	                rs.getInt("id"),
-	                rs.getString("nombre"),
-	                rs.getString("descripcion")
+	                rs.getString("nombre")
 	            );
 	        }
 	    } catch (SQLException e) {

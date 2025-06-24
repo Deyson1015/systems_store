@@ -2,12 +2,11 @@ package systems_store.mundo;
 
 public class Marca{
 	private int id;
-	private String nombre, descripcion;
+	private String nombre;
 	
-	public Marca(int id, String nombre, String descripcion) {
+	public Marca(int id, String nombre) {
 		this.id = id;
 		this.nombre = nombre;
-		this.descripcion = descripcion;
 	}
 
 	public int getId() {return id;}
@@ -15,9 +14,6 @@ public class Marca{
 
 	public String getNombre() {return nombre;}
 	public void setNombre(String nombre) {this.nombre = nombre;}
-	
-	public String getDescripcion() {return descripcion;}
-	public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
 	
 	public String toString() {
 		return nombre;

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class FormularioProducto extends JDialog implements ActionListener {
 
-    private final static String AGREGAR = "Agregar";
+    private final static String GUARDAR = "Guardar";
     private final static String SELECCIONAR = "Seleccionar";
 
     private InterfazTienda principal;
@@ -85,9 +85,9 @@ public class FormularioProducto extends JDialog implements ActionListener {
         add(panelInfo1, BorderLayout.CENTER);
 
         // Botones
-        btnAgregar = new JButton(AGREGAR);
+        btnAgregar = new JButton(GUARDAR);
         btnAgregar.addActionListener(this);
-        btnAgregar.setActionCommand(AGREGAR);
+        btnAgregar.setActionCommand(GUARDAR);
 
         btnCancelar = new JButton("Cancelar");
         btnCancelar.addActionListener(e -> dispose());
@@ -146,7 +146,7 @@ public class FormularioProducto extends JDialog implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Debe seleccionar un archivo en formato .jpg.", "Seleccionar imagen", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        } else if (comando.equals(AGREGAR)) {
+        } else if (comando.equals(GUARDAR)) {
             String nombre = txtNombre.getText();
             String marcaSeleccionada = (String) cmbMarca.getSelectedItem();
             String descripcion = txtDescripcion.getText();

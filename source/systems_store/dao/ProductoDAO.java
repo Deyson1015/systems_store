@@ -96,7 +96,7 @@ public class ProductoDAO {
      */
     public List<Producto> listarProductos() {
         List<Producto> lista = new ArrayList<>();
-        String sql = "SELECT p.nombre, p.precio, p.cantidad, p.foto, m.nombre AS nombre_marca " +
+        String sql = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.cantidad,  p.fecha_ingreso, p.foto, m.id AS id_marca, m.nombre AS nombre_marca  " +
         	"FROM productos AS p " +
         	"JOIN marcas AS m ON p.id_marca = m.id"
 
@@ -108,18 +108,17 @@ public class ProductoDAO {
             // Iterar sobre los resultados y construir objetos Producto
             while (rs.next()) {
             	  Marca m = new Marca(
-                		0,
-                		rs.getString("nombre_marca"),
-                		""
+                		rs.getInt("id_marca"),
+                		rs.getString("nombre_marca")     
                    );
                
             	  Producto p = new Producto(
-                      	0,
+                      	rs.getInt("id"),
                       	rs.getString("nombre"),
-                      	"",
+                      	rs.getString("descripcion"),
                       	rs.getInt("cantidad"),
                       	rs.getDouble("precio"),
-                      	null,
+                      	rs.getDate("fecha_ingreso"),
                       	rs.getString("foto"),
                       	m
                   );
@@ -134,47 +133,4 @@ public class ProductoDAO {
         return lista;
     }
 
-    /**
-     * Obtiene un producto de la base de datos por su ID.
-     * @param id Identificador del producto.
-     * @return Objeto Producto si se encontró, o null si no existe.
-     */
-    public Producto obtenerProductoPorId(int id) {
-        String sql = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.cantidad, p.fecha_ingreso, p.foto, " +
-                "m.id AS id_marca, m.nombre AS nombre_marca, m.descripcion AS descripcion_marca " +
-                "FROM productos AS p " + 
-                "JOIN marcas AS m ON p.id_marca = m.id " + 
-                "WHERE p.id=?";
-        try (Connection conn = Conexion.getConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-            	  Marca m = new Marca(
-                  		rs.getInt("id"),
-                  		rs.getString("nombre"),
-                  		rs.getString("descripcion")
-                  );
-            	  
-                Producto p = new Producto(
-                	rs.getInt("id"),
-                	rs.getString("nombre"),
-                	rs.getString("descripcion"),
-                	rs.getInt("cantidad"),
-                	rs.getDouble("precio"),
-                	rs.getDate("fecha_ingreso"),
-                	rs.getString("foto"),
-                	m
-                );
-
-                return p;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al obtener producto: " + e.getMessage());
-        }
-        return null;
-    }
 }
