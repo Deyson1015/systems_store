@@ -14,8 +14,8 @@ public class Producto {
 	public Producto(int id, String pNombre,  String pDescripcion, int pCantidad, double pPrecio, Date pFechaIngreso,
 			String pFoto, Marca pMarca) {
 		this.id = id;
-		this.nombre = pNombre;
-		this.descripcion = pDescripcion;
+		this.nombre = pNombre != null ? pNombre.toUpperCase() : "";;
+		this.descripcion = pDescripcion != null ? pDescripcion.toUpperCase() : "";
 		this.cantidad = pCantidad;
 		this.precio = pPrecio;
 		this.fechaIngreso = pFechaIngreso;
