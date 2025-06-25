@@ -18,9 +18,6 @@ public class InterfazTienda extends JFrame {
     // Panel donde se muestran los productos
     private JPanel panelProductos;
     
-    // Campo de búsqueda
-    private JTextField txtBuscar;
-
     // Acceso a la base de datos
     private ProductoDAO productoDAO;
     
@@ -60,7 +57,7 @@ public class InterfazTienda extends JFrame {
         header.setBackground(new Color(25, 118, 210));
         header.setBorder(new EmptyBorder(10, 15, 10, 15));
 
-        JLabel lblTitulo = new JLabel(" Systems Store");
+        JLabel lblTitulo = new JLabel(" Phone shop");
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitulo.setForeground(Color.WHITE);
 

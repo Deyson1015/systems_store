@@ -195,10 +195,11 @@ public class FormularioProducto extends JDialog implements ActionListener {
 	            }
 	
 	            // Validación cantidad y precio
-	            int cantidad, precio;
+	            int cantidad;
+	            Double precio;
 	            try {
 	                cantidad = Integer.parseInt(cantidadStr);
-	                precio = Integer.parseInt(precioStr);
+	                precio = Double.parseDouble(precioStr);
 	
 	                if (cantidad < 0 || precio < 0) {
 	                    JOptionPane.showMessageDialog(this, "La cantidad y el precio deben ser números positivos.", "Error", JOptionPane.ERROR_MESSAGE);

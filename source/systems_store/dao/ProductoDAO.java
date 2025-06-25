@@ -23,17 +23,14 @@ public class ProductoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {  // Preparar sentencia SQL
 
             // Asignar los valores a los parámetros del SQL
-            stmt.setString(1, producto.getNombre());
+            stmt.setString(1, producto.getNombre().toUpperCase());
             stmt.setInt(2, producto.getMarca().getId());
-            stmt.setString(3, producto.getDescripcion());
+            stmt.setString(3, producto.getDescripcion() != null ? producto.getDescripcion().toUpperCase() : null);
             stmt.setInt(4, producto.getCantidad());
             stmt.setDouble(5, producto.getPrecio());
             stmt.setDate(6, producto.getFechaIngreso()); 
             stmt.setString(7, producto.getFoto());
            
-            
-
-            // Ejecutar el INSERT y devolver si se insertó al menos una fila
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -53,9 +50,9 @@ public class ProductoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             // Asignar valores a los parámetros
-            stmt.setString(1, producto.getNombre());
+            stmt.setString(1, producto.getNombre().toUpperCase());
             stmt.setInt(2, producto.getMarca().getId());
-            stmt.setString(3, producto.getDescripcion());
+            stmt.setString(3, producto.getDescripcion() != null ? producto.getDescripcion().toUpperCase() : null);
             stmt.setInt(4, producto.getCantidad());
             stmt.setDouble(5, producto.getPrecio());
             stmt.setDate(6, producto.getFechaIngreso());
