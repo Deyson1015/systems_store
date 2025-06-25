@@ -218,6 +218,12 @@ public class FormularioProducto extends JDialog implements ActionListener {
 	
 	            Date fechaIngreso = new Date(txtFecha.getDate().getTime());
 	            
+	            Date fechaActual = new Date(System.currentTimeMillis());
+	            if (fechaIngreso.after(fechaActual)) {
+	                JOptionPane.showMessageDialog(this, "La fecha no puede ser mayor a la fecha actual.", "Error", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+	            
 	            // Obtener objeto Marca desde el nombre
 	            Marca marca = new MarcaDAO().obtenerMarcaPorNombre(marcaSeleccionada);
 	
