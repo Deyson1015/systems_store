@@ -295,9 +295,8 @@ public class InterfazTienda extends JFrame {
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     options, // Opciones personalizadas
-                    options[1]); // 
+                    options[1]); 
            
-
             boolean descendente = (confirm == 0);
             
             String criterio = "";
