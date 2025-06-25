@@ -287,13 +287,18 @@ public class InterfazTienda extends JFrame {
 
         if (seleccion != null) {
         	
-        	 // Preguntar si desea orden descendente
-            int confirm = JOptionPane.showConfirmDialog(this,
-                    "¿Como deseas ordenar (Si: Descendete) o (No Ascendente).?",
+        	Object[] options = {"Descendente", "Ascendente"}; 
+            int confirm = JOptionPane.showOptionDialog(this,
+                    "¿Cómo quieres ordenar?", 
                     "Confirmar orden",
-                    JOptionPane.YES_NO_OPTION);
+                    JOptionPane.DEFAULT_OPTION, 
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options, // Opciones personalizadas
+                    options[1]); // 
+           
 
-            boolean descendente = (confirm == JOptionPane.YES_OPTION);
+            boolean descendente = (confirm == 0);
             
             String criterio = "";
             if (seleccion.contains("Nombre")) {
