@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Tienda {
 	
-	   // Método general de ordenamiento que acepta un comparador y el orden
+	 // Método general de ordenamiento que acepta un comparador y el orden
     private static <T> void ordenar(List<T> lista, Comparator<T> comparator, boolean descendente) {
         if (descendente) {
             lista.sort(comparator.reversed());
@@ -14,43 +14,28 @@ public class Tienda {
         }
     }
 	
-    /**
-     * Estos metodos utilizan el metodo general para ordenar ya sea de forma descendente o ascendente
-     */
-
-	public static void ordenarPorPrecio(List<Producto> productos, boolean descendente) {
-		ordenar(productos, Comparator.comparingDouble(Producto::getPrecio), descendente);
-	}
-
-	public static void ordenarPorNombre(List<Producto> productos, boolean descendente) {
-		ordenar(productos, Comparator.comparing(Producto::getNombre), descendente);
-	}
-	
-	public static void ordenarPorCantidad(List<Producto> productos, boolean descendente) {
-		ordenar(productos, Comparator.comparingInt(Producto::getCantidad), descendente);
-	}
-
-	public static void ordenarPorFecha(List<Producto> productos, boolean descendente) {
-		ordenar(productos, Comparator.comparing(Producto::getFechaIngreso), descendente);
-	}
-	
-    public static void ordenar(List<Producto> productos, String criterio, boolean descendente) {
+    // Método que mapea el criterio a un comparador
+    private static Comparator<Producto> obtenerComparadorPorCriterio(String criterio) {
         switch (criterio) {
             case "precio":
-                ordenarPorPrecio(productos, descendente);
-                break;
+                return Comparator.comparingDouble(Producto::getPrecio);
             case "nombre":
-                ordenarPorNombre(productos, descendente);
-                break;
+                return Comparator.comparing(Producto::getNombre);
             case "cantidad":
-                ordenarPorCantidad(productos, descendente);
-                break;
+                return Comparator.comparingInt(Producto::getCantidad);
             case "fecha":
-                ordenarPorFecha(productos, descendente);
-                break;
+                return Comparator.comparing(Producto::getFechaIngreso);
             default:
-                System.out.println("Criterio de orden no reconocido: " + criterio);
-        }	
+                throw new IllegalArgumentException("Criterio de orden no reconocido: " + criterio);
+        }
     }
+	
+    // Método general de ordenamiento
+    public static void ordenar(List<Producto> productos, String criterio, boolean descendente) {
+        Comparator<Producto> comparator = obtenerComparadorPorCriterio(criterio);
+        ordenar(productos, comparator, descendente);
+    }
+   
+    
 }
 
