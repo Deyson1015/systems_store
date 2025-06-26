@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Tienda {
 	
-	   // Método general de ordenamiento que acepta un comparador y el orden
+	 // Método general de ordenamiento que acepta un comparador y el orden
     private static <T> void ordenar(List<T> lista, Comparator<T> comparator, boolean descendente) {
         if (descendente) {
             lista.sort(comparator.reversed());
@@ -14,7 +14,7 @@ public class Tienda {
         }
     }
 	
- // Método que mapea el criterio a un comparador
+    // Método que mapea el criterio a un comparador
     private static Comparator<Producto> obtenerComparadorPorCriterio(String criterio) {
         switch (criterio) {
             case "precio":
