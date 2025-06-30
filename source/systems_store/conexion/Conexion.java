@@ -1,4 +1,4 @@
-package systems_store.conexion.java;
+package systems_store.conexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +9,14 @@ public class Conexion {
 	private static final String USER = "root";
 	private static final String PASS = "";
 	
+   static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver"); 
+        } catch (ClassNotFoundException e) {
+            System.err.println("No se encontró el driver de MySQL: " + e.getMessage());
+        }
+    }
+   
 	public static Connection getConexion() {
 		
 		try {
@@ -20,4 +28,4 @@ public class Conexion {
 		}
 	}
 }
-	
+	 
